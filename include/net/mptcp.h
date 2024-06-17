@@ -109,7 +109,8 @@ struct mptcp_sched_data {
 };
 
 /* MPTCP scheduler push flags */
-#define MPTCP_SCHED_FLAG_RESCHEDULE BIT(0)
+#define MPTCP_SCHED_FLAG_RESCHEDULE	BIT(0)
+#define MPTCP_SCHED_FLAG_REINJECT	(BIT(1) | MPTCP_SCHED_FLAG_RESCHEDULE)
 
 /* Represent a chunk of data that will be sent on a subflow */
 struct mptcp_sched_chunk {
@@ -125,6 +126,7 @@ struct mptcp_sched_chunk {
 	 * Available flags are:
 	 * - MPTCP_SCHED_FLAG_RESCHEDULE: the scheduler will be called again
 	 *   after processing this chunk (potentially limited).
+	 * - MPTCP_SCHED_FLAG_REINJECT: this chunk will be rescheduled.
 	 *
 	 * 0 means default behavior, ie. full chunk sent and subflow continue
 	 * being used for further chunks.

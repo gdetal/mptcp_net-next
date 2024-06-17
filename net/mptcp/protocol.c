@@ -1545,9 +1545,14 @@ static int __subflow_push_pending(struct sock *sk, struct sock *ssk,
 
 			info->sent += ret;
 			copied += ret;
-			len -= ret;
 
-			mptcp_update_post_push(msk, dfrag, ret);
+			if ((sflags & MPTCP_SCHED_FLAG_REINJECT) != MPTCP_SCHED_FLAG_REINJECT) {
+				len -= ret;
+				mptcp_update_post_push(msk, dfrag, ret);
+			} else {
+				// re-inject the same data on another subflow
+				break;
+			}
 		}
 
 		/* if the whole data has been sent, move to next data segment: */
